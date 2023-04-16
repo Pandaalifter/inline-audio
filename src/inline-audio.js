@@ -5,6 +5,8 @@ const logo = new URL('../assets/open-wc-logo.svg', import.meta.url).href;
 class InlineAudio extends LitElement {
   static properties = {
     header: { type: String },
+    audioFile: { attribute: "audio-file", type: String},
+    bob: { type: Boolean}
   }
 
   static styles = css`
@@ -21,66 +23,34 @@ class InlineAudio extends LitElement {
       text-align: center;
       background-color: var(--inline-audio-background-color);
     }
-
-    main {
-      flex-grow: 1;
+    .container {
+      background-color: blue;
+      width: 400px;
     }
-
-    .logo {
-      margin-top: 36px;
-      animation: app-logo-spin infinite 20s linear;
-    }
-
-    @keyframes app-logo-spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .app-footer {
-      font-size: calc(12px + 0.5vmin);
-      align-items: center;
-    }
-
-    .app-footer a {
-      margin-left: 5px;
+    :host([bob]) .container{
+      background-color: red;
     }
   `;
 
   constructor() {
     super();
     this.header = 'My app';
+    this.audioFile = new URL('../assets/software-song.mp3', import.meta.url).href;
+    this.bob = false;
+  }
+
+  handleClickEvent(){
+    var audiop = document.querySelector('.audio-player')
+    audiop.play();
+    this.bob = true;
   }
 
   render() {
     return html`
-      <main>
-        <div class="logo"><img alt="open-wc logo" src=${logo} /></div>
-        <h1>${this.header}</h1>
-
-        <p>Edit <code>src/InlineAudio.js</code> and save to reload.</p>
-        <a
-          class="app-link"
-          href="https://open-wc.org/guides/developing-components/code-examples/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Code examples
-        </a>
-      </main>
-
-      <p class="app-footer">
-        🚽 Made with love by
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/open-wc"
-          >open-wc</a
-        >.
-      </p>
+      <div class="container" onclick="${this.handleClickEvent}"> Kevin Spacey's Chihuhua
+      <button @click="${this.handleClickEvent}"> Steve </button>
+      <audio controls class="audio-player" src="${this.audioFile}" type="audio/mpeg"></audio>
+      <div>
     `;
   }
 }
