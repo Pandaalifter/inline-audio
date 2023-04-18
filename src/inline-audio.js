@@ -38,7 +38,7 @@ class InlineAudio extends LitElement {
 
   constructor() {
     super();
-    this.audioFile = new URL('/assets/software-song.mp3', import.meta.url).href;
+    this.audioFile = new URL('../assets/software-song.mp3', import.meta.url).href;
     this.playerIcon = "av:play-arrow";
     this.isPlaying = false;
   }
