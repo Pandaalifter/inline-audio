@@ -38,7 +38,7 @@ class InlineAudio extends LitElement {
 
   constructor() {
     super();
-    this.audioFile = '../assets/software-song.mp3';
+    this.audioFile = new URL('../assets/software-song.mp3', import.meta.url).href;
     this.playerIcon = "av:play-arrow";
     this.isPlaying = false;
   }
@@ -56,7 +56,7 @@ class InlineAudio extends LitElement {
   }
 
   handleClickEvent(){
-    if(this.shadowRoot.querySelector('audio').paused == true){
+    if(this.shadowRoot.querySelector('audio').paused){
       this.shadowRoot.querySelector('.player').play();
       this.isPlaying = true;
       this.playerIcon = "av:pause";
