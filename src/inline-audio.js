@@ -6,8 +6,7 @@ const logo = new URL('../assets/open-wc-logo.svg', import.meta.url).href;
 
 class InlineAudio extends LitElement {
   static properties = {
-    header: { type: String },
-    audioFile: { attribute: "audio-file", type: String},
+    audioFile: { attribute: "audio-file", type: String, reflect: true},
     playerIcon: { type: String},
     isPlaying: { type: Boolean, reflect: true}
   }
@@ -26,7 +25,7 @@ class InlineAudio extends LitElement {
       display: inline-flex;
       align-items: center;
       padding: 4px 4px 4px 0px;
-      background-color: grey;
+      background: grey;
       border-radius: 4px;
       min-width: 64px;
       cursor: pointer;
@@ -39,10 +38,22 @@ class InlineAudio extends LitElement {
 
   constructor() {
     super();
-    this.header = 'My app';
     this.audioFile = new URL('../assets/software-song.mp3', import.meta.url).href;
     this.playerIcon = "av:play-arrow";
     this.isPlaying = false;
+  }
+
+  handleProgressBar(){
+    if(this.shadowRoot.querySelector(".player").ended){
+      this.isPlaying = false;
+      this.playerIcon = "av:play-arrow";
+      console.log(this.isPlaying);
+    }
+    var audioDuration = this.shadowRoot.querySelector(".player").duration;
+    var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
+    var progressPercentage = (audioCurrentTime / audioDuration)*100;
+    this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, orange 0% ${progressPercentage}%, grey ${progressPercentage}% 100%)`;
+    console.log("Check: " + progressPercentage);
   }
 
   handleClickEvent(){
@@ -65,7 +76,7 @@ class InlineAudio extends LitElement {
       <div class="container" @click="${this.handleClickEvent}"> 
         <simple-icon class="icon-spacing" icon="${this.playerIcon}"></simple-icon>
         <slot></slot>
-        <audio class="player" src="${this.audioFile}" type="audio/mpeg"></audio>
+        <audio class="player" src="${this.audioFile}" type="audio/mpeg" @timeupdate="${this.handleProgressBar}"></audio>
       <div>
     `;
   }
