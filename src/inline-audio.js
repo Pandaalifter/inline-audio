@@ -53,7 +53,6 @@ class InlineAudio extends LitElement {
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
     var progressPercentage = (audioCurrentTime / audioDuration)*100;
     this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, orange 0% ${progressPercentage}%, grey ${progressPercentage}% 100%)`;
-    console.log("Check: " + progressPercentage);
   }
 
   handleClickEvent(){
