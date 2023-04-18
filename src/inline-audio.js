@@ -38,7 +38,7 @@ class InlineAudio extends LitElement {
 
   constructor() {
     super();
-    this.audioFile = new URL('../assets/software-song.mp3', import.meta.url).href;
+    this.audioFile = '../assets/software-song.mp3';
     this.playerIcon = "av:play-arrow";
     this.isPlaying = false;
   }
@@ -76,7 +76,7 @@ class InlineAudio extends LitElement {
       <div class="container" @click="${this.handleClickEvent}"> 
         <simple-icon class="icon-spacing" icon="${this.playerIcon}"></simple-icon>
         <slot></slot>
-        <audio class="player" src="${this.audioFile}" type="audio/mpeg" @timeupdate="${this.handleProgressBar}"></audio>
+        <audio class="player" src="${new URL(this.audioFile, import.meta.url).href}" type="audio/mpeg" @timeupdate="${this.handleProgressBar}"></audio>
       <div>
     `;
   }
