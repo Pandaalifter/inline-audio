@@ -61,9 +61,11 @@ class InlineAudio extends LitElement {
   }
 
   handlePlaythrough(){
-    console.log("Loading finished");
-    this.canPlay = true;
-    this.audioController();
+    setTimeout(() => {
+      console.log("Loading finished");
+      this.canPlay = true;
+      this.audioController();
+    }, 500); 
   }
 
   audioController(){
