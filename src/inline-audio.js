@@ -46,9 +46,7 @@ class InlineAudio extends LitElement {
 
   handleProgress(){
     if(this.shadowRoot.querySelector(".player").ended){
-      this.playing = false;
-      this.icon = "av:play-arrow";
-      console.log(this.playing);
+      this.audioController(false);
     }
     var audioDuration = this.shadowRoot.querySelector(".player").duration;
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
@@ -66,13 +64,13 @@ class InlineAudio extends LitElement {
     setTimeout(() => {
       console.log("Loading finished");
       this.canPlay = true;
-      this.audioController();
+      this.audioController(true);
     }, 500); 
   }
 
-  audioController(){
+  audioController(playState){
     var audio = this.shadowRoot.querySelector('.player');
-    if(audio.paused){
+    if(playState){
       audio.play();
       this.playing = true;
       this.icon = "av:pause";
@@ -87,13 +85,19 @@ class InlineAudio extends LitElement {
   }
 
   handleClickEvent(){
-    if(!this.shadowRoot.querySelector('.player').hasAttribute("src")){
+    var audio = this.shadowRoot.querySelector('.player');
+    if(!audio.hasAttribute("src")){
       this.icon = "hax:loading";
       this.loadAudio(this.source);
     }
 
     if(this.canPlay){
-      this.audioController();
+      if(audio.paused){
+        this.audioController(true);
+      }
+      else{
+        this.audioController(false);
+      }
     }
   }
 
