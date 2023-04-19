@@ -34,9 +34,6 @@ class InlineAudio extends LitElement {
     .icon-spacing{
       padding-right: 8px;
     }
-    .kevin{
-      pointer-events: none;
-    }
   `;
 
   constructor() {
@@ -49,9 +46,7 @@ class InlineAudio extends LitElement {
 
   handleProgress(){
     if(this.shadowRoot.querySelector(".player").ended){
-      this.playing = false;
-      this.icon = "av:play-arrow";
-      console.log(this.playing);
+      this.audioController();
     }
     var audioDuration = this.shadowRoot.querySelector(".player").duration;
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
@@ -65,44 +60,45 @@ class InlineAudio extends LitElement {
     audioFile.load();
   }
 
-  bufferListener(){
+  handlePlaythrough(){
     console.log("Loading finished");
     this.canPlay = true;
-    this.shadowRoot.querySelector('.player').play();
-    this.playing = true;
-    this.icon = "av:pause";
-    console.log(this.playing);
+    this.audioController();
+  }
+
+  audioController(){
+    var audio = this.shadowRoot.querySelector('.player');
+    if(audio.paused){
+      audio.play();
+      this.playing = true;
+      this.icon = "av:pause";
+      console.log(this.playing);
+    }
+    else{
+      audio.pause();
+      this.playing = false;
+      this.icon = "av:play-arrow";
+      console.log(this.playing);
+    }
   }
 
   handleClickEvent(){
-    var audio = this.shadowRoot.querySelector('.player');
-    if(!audio.hasAttribute("src")){
+    if(!this.shadowRoot.querySelector('.player').hasAttribute("src")){
       this.icon = "hax:loading";
       this.loadAudio(this.source);
     }
 
     if(this.canPlay){
-        if(this.shadowRoot.querySelector('audio').paused){
-          this.shadowRoot.querySelector('.player').play();
-          this.playing = true;
-          this.icon = "av:pause";
-          console.log(this.playing);
-        }
-        else{
-          this.shadowRoot.querySelector('.player').pause();
-          this.playing = false;
-          this.icon = "av:play-arrow";
-          console.log(this.playing);
-        }
-      }
+      this.audioController();
+    }
   }
 
   render() {
     return html`
       <div class="container"> 
         <simple-icon-button class="icon-spacing" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
-        <slot class="kevin"></slot>
-        <audio class="player" type="audio/mpeg" @canplaythrough="${this.bufferListener}" @timeupdate="${this.handleProgress}"></audio>
+        <slot></slot>
+        <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
       <div>
     `;
   }
