@@ -1,19 +1,19 @@
 import { LitElement, html, css } from 'lit';
 import "@lrnwebcomponents/simple-icon/simple-icon.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icons.js";
-
-const logo = new URL('../assets/open-wc-logo.svg', import.meta.url).href;
+import "@lrnwebcomponents/simple-icon/lib/simple-icon-button.js";
+import "@lrnwebcomponents/hax-iconset/lib/simple-hax-iconset.js";
 
 class InlineAudio extends LitElement {
   static properties = {
-    audioFile: { attribute: "audio-file", type: String, reflect: true},
-    playerIcon: { type: String},
-    isPlaying: { type: Boolean, reflect: true}
+    source: { type: String, reflect: true},
+    icon: { type: String},
+    playing: { type: Boolean, reflect: true},
+    canPlay: { type: Boolean, reflect: true}
   }
 
   static styles = css`
     :host {
-      min-height: 100vh;
       display: inline;
       vertical-align:middle;
       color: #1a2b42;
@@ -28,26 +28,30 @@ class InlineAudio extends LitElement {
       background: grey;
       border-radius: 4px;
       min-width: 64px;
-      cursor: pointer;
       font-size: 18px;
+      /* cursor: pointer; */
     }
     .icon-spacing{
       padding-right: 8px;
+    }
+    .kevin{
+      pointer-events: none;
     }
   `;
 
   constructor() {
     super();
-    this.audioFile = '../assets/software-song.mp3';
-    this.playerIcon = "av:play-arrow";
-    this.isPlaying = false;
+    this.source = '';
+    this.icon = "av:play-arrow";
+    this.playing = false;
+    this.canPlay = false;
   }
 
-  handleProgressBar(){
+  handleProgress(){
     if(this.shadowRoot.querySelector(".player").ended){
-      this.isPlaying = false;
-      this.playerIcon = "av:play-arrow";
-      console.log(this.isPlaying);
+      this.playing = false;
+      this.icon = "av:play-arrow";
+      console.log(this.playing);
     }
     var audioDuration = this.shadowRoot.querySelector(".player").duration;
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
@@ -55,27 +59,50 @@ class InlineAudio extends LitElement {
     this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, orange 0% ${progressPercentage}%, grey ${progressPercentage}% 100%)`;
   }
 
+  loadAudio(source) {
+    const audioFile = this.shadowRoot.querySelector('.player');
+    audioFile.src = source;
+    audioFile.load();
+  }
+
+  bufferListener(){
+    console.log("Loading finished");
+    this.canPlay = true;
+    this.shadowRoot.querySelector('.player').play();
+    this.playing = true;
+    this.icon = "av:pause";
+    console.log(this.playing);
+  }
+
   handleClickEvent(){
-    if(this.shadowRoot.querySelector('audio').paused){
-      this.shadowRoot.querySelector('.player').play();
-      this.isPlaying = true;
-      this.playerIcon = "av:pause";
-      console.log(this.isPlaying);
+    var audio = this.shadowRoot.querySelector('.player');
+    if(!audio.hasAttribute("src")){
+      this.icon = "hax:loading";
+      this.loadAudio(this.source);
     }
-    else{
-      this.shadowRoot.querySelector('.player').pause();
-      this.isPlaying = false;
-      this.playerIcon = "av:play-arrow";
-      console.log(this.isPlaying);
-    }
+
+    if(this.canPlay){
+        if(this.shadowRoot.querySelector('audio').paused){
+          this.shadowRoot.querySelector('.player').play();
+          this.playing = true;
+          this.icon = "av:pause";
+          console.log(this.playing);
+        }
+        else{
+          this.shadowRoot.querySelector('.player').pause();
+          this.playing = false;
+          this.icon = "av:play-arrow";
+          console.log(this.playing);
+        }
+      }
   }
 
   render() {
     return html`
-      <div class="container" @click="${this.handleClickEvent}"> 
-        <simple-icon class="icon-spacing" icon="${this.playerIcon}"></simple-icon>
-        <slot></slot>
-        <audio class="player" src="${this.audioFile}" type="audio/mpeg" @timeupdate="${this.handleProgressBar}"></audio>
+      <div class="container"> 
+        <simple-icon-button class="icon-spacing" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
+        <slot class="kevin"></slot>
+        <audio class="player" type="audio/mpeg" @canplaythrough="${this.bufferListener}" @timeupdate="${this.handleProgress}"></audio>
       <div>
     `;
   }
