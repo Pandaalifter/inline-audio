@@ -46,7 +46,9 @@ class InlineAudio extends LitElement {
 
   handleProgress(){
     if(this.shadowRoot.querySelector(".player").ended){
-      this.audioController();
+      this.playing = false;
+      this.icon = "av:play-arrow";
+      console.log(this.playing);
     }
     var audioDuration = this.shadowRoot.querySelector(".player").duration;
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
