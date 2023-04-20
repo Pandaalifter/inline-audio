@@ -3,6 +3,7 @@ import "@lrnwebcomponents/simple-icon/simple-icon.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icons.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icon-button.js";
 import "@lrnwebcomponents/hax-iconset/lib/simple-hax-iconset.js";
+import "@lrnwebcomponents/simple-colors/simple-colors.js";
 
 class InlineAudio extends LitElement {
   static properties = {
@@ -25,7 +26,7 @@ class InlineAudio extends LitElement {
       display: inline-flex;
       align-items: center;
       padding: 4px 4px 4px 0px;
-      background: grey;
+      background: var(--simple-colors-default-theme-grey-6);
       border-radius: 4px;
       min-width: 64px;
       font-size: 18px;
@@ -51,7 +52,7 @@ class InlineAudio extends LitElement {
     var audioDuration = this.shadowRoot.querySelector(".player").duration;
     var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
     var progressPercentage = (audioCurrentTime / audioDuration)*100;
-    this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, orange 0% ${progressPercentage}%, grey ${progressPercentage}% 100%)`;
+    this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-6) 0% ${progressPercentage}%, grey ${progressPercentage}% 100%)`;
   }
 
   loadAudio(source) {
@@ -103,11 +104,13 @@ class InlineAudio extends LitElement {
 
   render() {
     return html`
-      <div class="container"> 
-        <simple-icon-button class="icon-spacing" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
-        <slot></slot>
-        <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
-      <div>
+      <simple-colors accent-color="purple">
+        <div class="container"> 
+          <simple-icon-button class="icon-spacing" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
+          <slot></slot>
+          <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
+        </div>
+      </simple-colors>
     `;
   }
 }
