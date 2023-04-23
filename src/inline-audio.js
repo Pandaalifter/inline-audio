@@ -21,7 +21,7 @@ class InlineAudio extends LitElement {
     :host {
       --inline-audio-font: sans-serif;
       --inline-audio-padding: 4px 4px 4px 4px;
-      --inline-audio-margin: 0 auto;
+      --inline-audio-margin: 0px auto 4px;
       --inline-audio-border: 0;
       --inline-audio-font-size: 18px;
       --inline-audio-icon-padding: 0px 4px 0px 0px;
@@ -30,7 +30,6 @@ class InlineAudio extends LitElement {
 
       font-family: var(--inline-audio-font);
       color: var(--simple-colors-default-theme-grey-12);
-      margin: var(--inline-audio-margin);
     }
     .container {
       display: inline-flex;
@@ -42,11 +41,12 @@ class InlineAudio extends LitElement {
       background: var(--simple-colors-default-theme-grey-4);
       border: var(--inline-audio-border);
       font-size: var(--inline-audio-font-size);
+      margin: var(--inline-audio-margin);
     }
     .icon{
       --simple-icon-color: black;
       --simple-icon-button-focus-color: black;
-      --simple-icon-button-focus-opacity: 60%;
+      --simple-icon-button-focus-opacity: 80%;
 
       padding: var(--inline-audio-icon-padding);
     }
