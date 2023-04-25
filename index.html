@@ -9,14 +9,17 @@
 
   <style>
     :root {
-      --badge-app-accent-color: #3e98d3;
+      --inline-audio-font: sans-serif;
+      --inline-audio-font-size: 18px;
+      --inline-audio-font-color: #000000;
     }
     html,
     body {
       margin: 0;
       padding: 0;
-      font-family: sans-serif;
-      font-size: 18px;
+      font-family: var(--inline-audio-font);
+      font-size: var(--inline-audio-font-size);
+      color: var(--inline-audio-font-color);
       background-color: #ededed;
     }
   </style>
@@ -24,9 +27,9 @@
 </head>
 
 <body>
-    Richard Stallman once sang the <inline-audio source="../assets/software-song.mp3">Open Source song.</inline-audio>
-    The King of Burgers made a decree. The decree came in the form of a song. Not just any song, but a legendary song that bellowed to the world. This song was of <inline-audio source='../assets/whopper.mp3'>whoppers</inline-audio> and toppers.
-    The seven seas were aghast with the tune of <inline-audio source='../assets/pirates.mp3'></inline-audio> over the wind.
+    Richard Stallman once sang the <inline-audio accent-color="purple" source="../assets/software-song.mp3">Open Source song.</inline-audio>
+    The King of Burgers made a decree. The decree came in the form of a song. Not just any song, but a legendary song that bellowed to the world. This song was of <inline-audio accent-color="orange" source='../assets/whopper.mp3'>whoppers</inline-audio> and toppers.
+    The seven seas were aghast with the tune of <inline-audio accent-color="red" source='../assets/pirates.mp3'></inline-audio> over the wind.
     Did you know that the critically acclaimed MMORPG Final Fantasy XIV has a free trial, and includes the entirety of A Realm Reborn AND the award-winning Heavensward expansion up to level 60 with no restrictions on playtime? Sign up, and enjoy Eorzea today!
   <script type="module">
     import "./src/inline-audio.js"

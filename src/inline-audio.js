@@ -1,35 +1,33 @@
 import { LitElement, html, css } from 'lit';
+import { SimpleColors } from '@lrnwebcomponents/simple-colors';
 import "@lrnwebcomponents/simple-icon/simple-icon.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icons.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icon-button.js";
 import "@lrnwebcomponents/hax-iconset/lib/simple-hax-iconset.js";
 import "@lrnwebcomponents/simple-colors/simple-colors.js";
 
-class InlineAudio extends LitElement {
+class InlineAudio extends SimpleColors {
   static get properties(){
     return{
+      ...super.properties,
       source: { type: String, reflect: true},
       icon: { type: String},
       aria: { type: String},
+      title: { type: String},
       playing: { type: Boolean, reflect: true},
       canPlay: { type: Boolean}
     }
   }
 
   static get styles(){ 
-    return css`
+    return [...super.styles, css`
     :host {
-      --inline-audio-font: sans-serif;
       --inline-audio-padding: 4px 4px 4px 4px;
       --inline-audio-margin: 0px auto 4px;
       --inline-audio-border: 0;
-      --inline-audio-font-size: 18px;
       --inline-audio-icon-padding: 0px 4px 0px 0px;
 
       vertical-align: middle;
-
-      font-family: var(--inline-audio-font);
-      color: var(--simple-colors-default-theme-grey-12);
     }
     .container {
       display: inline-flex;
@@ -40,24 +38,26 @@ class InlineAudio extends LitElement {
       padding: var(--inline-audio-padding);
       background: var(--simple-colors-default-theme-grey-4);
       border: var(--inline-audio-border);
-      font-size: var(--inline-audio-font-size);
       margin: var(--inline-audio-margin);
     }
     .icon{
       --simple-icon-color: black;
       --simple-icon-button-focus-color: black;
       --simple-icon-button-focus-opacity: 80%;
+      --simple-icon-width: 24px;
+      --simple-icon-height: 24px;
 
       padding: var(--inline-audio-icon-padding);
     }
-  `;
+  `];
   }
 
   constructor() {
     super();
     this.source = '';
     this.icon = "av:play-arrow";
-    this.aria = "Button to play related audio";
+    this.aria = "Select to play a related audio clip";
+    this.title = "Play";
     this.playing = false;
     this.canPlay = false;
   }
@@ -94,14 +94,16 @@ class InlineAudio extends LitElement {
       audio.play();
       this.playing = true;
       this.icon = "av:pause";
-      this.aria = "Button to pause related audio";
+      this.aria = "Select to pause a related audio clip";
+      this.title = "Pause";
       console.log(this.playing);
     }
     else{
       audio.pause();
       this.playing = false;
       this.icon = "av:play-arrow";
-      this.aria = "Button to play related audio";
+      this.aria = "Select to play a related audio clip";
+      this.title = "Play"
       console.log(this.playing);
     }
   }
@@ -140,13 +142,11 @@ class InlineAudio extends LitElement {
 
   render() {
     return html`
-      <simple-colors accent-color="orange">
         <div class="container"> 
-          <simple-icon-button class="icon" aria-label="${this.aria}" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
+          <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
           <slot></slot>
           <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
         </div>
-      </simple-colors>
     `;
   }
 }
