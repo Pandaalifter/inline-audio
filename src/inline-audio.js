@@ -15,7 +15,8 @@ class InlineAudio extends SimpleColors {
       aria: { type: String},
       title: { type: String},
       playing: { type: Boolean, reflect: true},
-      canPlay: { type: Boolean}
+      canPlay: { type: Boolean},
+      doubleClick: { type: Boolean}
     }
   }
 
@@ -34,6 +35,7 @@ class InlineAudio extends SimpleColors {
       align-items: center;
       min-width: 40px;
       border-radius: 4px;
+      cursor: pointer;
 
       padding: var(--inline-audio-padding);
       background: var(--simple-colors-default-theme-grey-4);
@@ -60,6 +62,7 @@ class InlineAudio extends SimpleColors {
     this.title = "Play";
     this.playing = false;
     this.canPlay = false;
+    this.doubleClick = false;
   }
 
   handleProgress(){
@@ -108,19 +111,34 @@ class InlineAudio extends SimpleColors {
     }
   }
 
-  handleClickEvent(){
+  handleClickEvent(e){
     const audio = this.shadowRoot.querySelector('.player');
-    if(!audio.hasAttribute("src")){
-      this.icon = "hax:loading";
-      this.loadAudio(this.source);
+    const selection = this.shadowRoot.getSelection();
+
+    if (this.doubleClick) {
+      console.log('Double click detected');
+      this.doubleClick = false;
+      clearTimeout(timeout);
     } 
-    else if(this.canPlay){
-      if(audio.paused){
-        this.audioController(true);
-      }
-      else{
-        this.audioController(false);
-      }
+    else {
+      this.doubleClick = true;
+      var timeout = setTimeout(() => {
+        this.doubleClick = false;
+        if(!selection.toString()){
+          if(!audio.hasAttribute("src")){
+            this.icon = "hax:loading";
+            this.loadAudio(this.source);
+          } 
+          else if(this.canPlay){
+            if(audio.paused){
+              this.audioController(true);
+            }
+            else{
+              this.audioController(false);
+            }
+          }
+        }
+      }, 300);
     }
   }
 
@@ -142,8 +160,8 @@ class InlineAudio extends SimpleColors {
 
   render() {
     return html`
-        <div class="container"> 
-          <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}" @click="${this.handleClickEvent}"></simple-icon-button>
+        <div class="container" @click="${this.handleClickEvent}"> 
+          <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}"></simple-icon-button>
           <slot></slot>
           <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
         </div>
