@@ -142,7 +142,7 @@ class InlineAudio extends SimpleColors {
   updated(changedProperties){
     changedProperties.forEach((oldValue, propName)=>{
       if(propName === "playing"){
-        this.dispatchEvent(new CustomEvent('opened-changed', {
+        this.dispatchEvent(new CustomEvent('playing-changed', {
           composed: true,
           bubbles: true,
           cancelable: false,
