@@ -15,8 +15,7 @@ class InlineAudio extends SimpleColors {
       aria: { type: String},
       title: { type: String},
       playing: { type: Boolean, reflect: true},
-      canPlay: { type: Boolean},
-      doubleClick: { type: Boolean}
+      canPlay: { type: Boolean}
     }
   }
 
@@ -24,7 +23,7 @@ class InlineAudio extends SimpleColors {
     return [...super.styles, css`
     :host {
       --inline-audio-padding: 4px 4px 4px 4px;
-      --inline-audio-margin: 0px auto 4px;
+      --inline-audio-margin: 8px 2px 8px;
       --inline-audio-border: 0;
       --inline-audio-icon-padding: 0px 4px 0px 0px;
 
@@ -42,14 +41,20 @@ class InlineAudio extends SimpleColors {
       border: var(--inline-audio-border);
       margin: var(--inline-audio-margin);
     }
+    .container:focus-within{
+      outline: 2px solid var(--simple-colors-default-theme-accent-4)
+    }
     .icon{
       --simple-icon-color: black;
       --simple-icon-button-focus-color: black;
-      --simple-icon-button-focus-opacity: 80%;
+      --simple-icon-button-focus-opacity: 70%;
       --simple-icon-width: 24px;
       --simple-icon-height: 24px;
 
       padding: var(--inline-audio-icon-padding);
+    }
+    simple-icon-button::part(button){
+      outline: none;
     }
   `];
   }
@@ -62,18 +67,21 @@ class InlineAudio extends SimpleColors {
     this.title = "Play";
     this.playing = false;
     this.canPlay = false;
-    this.doubleClick = false;
   }
 
   handleProgress(){
-    if(this.shadowRoot.querySelector(".player").ended){
+    const audio = this.shadowRoot.querySelector(".player");
+    const container = this.shadowRoot.querySelector(".container");
+
+    if(audio.ended){
       this.audioController(false);
+      container.style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% 100%, var(--simple-colors-default-theme-grey-4) 100% 100%)`;
     }
-    if(!this.shadowRoot.querySelector(".player").paused){
-      var audioDuration = this.shadowRoot.querySelector(".player").duration;
-      var audioCurrentTime = this.shadowRoot.querySelector(".player").currentTime;
+    if(!audio.paused){
+      var audioDuration = audio.duration;
+      var audioCurrentTime = audio.currentTime;
       var progressPercentage = (audioCurrentTime / audioDuration)*100;
-      this.shadowRoot.querySelector(".container").style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-4) ${progressPercentage}% 100%)`;
+      container.style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-4) ${progressPercentage}% 100%)`;
     }
   }
 
@@ -111,34 +119,23 @@ class InlineAudio extends SimpleColors {
     }
   }
 
-  handleClickEvent(e){
+  handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
     const selection = this.shadowRoot.getSelection();
 
-    if (this.doubleClick) {
-      console.log('Double click detected');
-      this.doubleClick = false;
-      clearTimeout(timeout);
-    } 
-    else {
-      this.doubleClick = true;
-      var timeout = setTimeout(() => {
-        this.doubleClick = false;
-        if(!selection.toString()){
-          if(!audio.hasAttribute("src")){
-            this.icon = "hax:loading";
-            this.loadAudio(this.source);
-          } 
-          else if(this.canPlay){
-            if(audio.paused){
-              this.audioController(true);
-            }
-            else{
-              this.audioController(false);
-            }
-          }
+    if(!selection.toString()){
+      if(!audio.hasAttribute("src")){
+        this.icon = "hax:loading";
+        this.loadAudio(this.source);
+      } 
+      else if(this.canPlay){
+        if(audio.paused){
+          this.audioController(true);
         }
-      }, 300);
+        else{
+          this.audioController(false);
+        }
+      }
     }
   }
 
