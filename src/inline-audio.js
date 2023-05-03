@@ -136,18 +136,18 @@ class InlineAudio extends SimpleColors {
 
     // Function will only propagate if there is no selected content
       // Icon state changed to loading, and loadAudio will run on first execution
-      if(!audio.hasAttribute("src")){
-        this.icon = "hax:loading";
-        this.loadAudio(this.source);
-      } 
-      else if(this.canPlay){
+      // if(!audio.hasAttribute("src")){
+      //   this.icon = "hax:loading";
+      //   this.loadAudio(this.source);
+      // } 
+      // else if(this.canPlay){
         if(audio.paused){
           this.audioController(true);
         }
         else{
           this.audioController(false);
         }
-      }
+      
     
   }
 
