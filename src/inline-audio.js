@@ -95,17 +95,18 @@ class InlineAudio extends SimpleColors {
   loadAudio(source) {
     const audioFile = this.shadowRoot.querySelector('.player');
     audioFile.src = source;
+    console.log("Source set");
     audioFile.load();
+    console.log("Actually loaded");
   }
 
   // Listens for audio object to flag "canplaythrough" property once source has fully loaded to prevent buffering
   handlePlaythrough(){
-    console.log("Hi")
-    // setTimeout(() => {
-    //   console.log("Loading finished");
-    //   this.canPlay = true;
-    //   this.audioController(true);
-    // }, 500); 
+    setTimeout(() => {
+      console.log("Loading finished");
+      this.canPlay = true;
+      this.audioController(true);
+    }, 500); 
   }
 
   // Function takes in boolean to determine action, used across other functions
@@ -121,6 +122,7 @@ class InlineAudio extends SimpleColors {
       this.title = "Pause";
       console.log(this.playing);
     }
+    // Flags playing boolean as false, stops audio object, and matches state of icons and accessibility
     else{
       audio.pause();
       this.playing = false;
@@ -134,22 +136,25 @@ class InlineAudio extends SimpleColors {
   // When click event is flagged, listens for the state of audio object
   handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
+    const selection = window.getSelection();
 
     // Function will only propagate if there is no selected content
+    if(!selection.toString()){
       // Icon state changed to loading, and loadAudio will run on first execution
-      // if(!audio.hasAttribute("src")){
-      //   this.icon = "hax:loading";
-      //   this.loadAudio(this.source);
-      // } 
-      // else if(this.canPlay){
+      if(!audio.hasAttribute("src")){
+        this.icon = "hax:loading";
+        this.loadAudio(this.source);
+      } 
+      // Subsequent executions will trigger audioController based on state of audio object
+      else if(this.canPlay){
         if(audio.paused){
           this.audioController(true);
         }
         else{
           this.audioController(false);
         }
-      
-    
+      }
+    }
   }
 
   // Updated lifecycle dispatches a custom event listener when play boolean changes state
@@ -176,7 +181,7 @@ class InlineAudio extends SimpleColors {
           <!-- A11y accessible -->
           <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}"></simple-icon-button>
           <slot></slot>
-          <audio class="player" src="${this.source}" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
+          <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
         </div>
     `;
   }
