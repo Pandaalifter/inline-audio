@@ -120,7 +120,6 @@ class InlineAudio extends SimpleColors {
       this.title = "Pause";
       console.log(this.playing);
     }
-    // Flags playing boolean as false, stops audio object, and matches state of icons and accessibility
     else{
       audio.pause();
       this.playing = false;
@@ -134,16 +133,13 @@ class InlineAudio extends SimpleColors {
   // When click event is flagged, listens for the state of audio object
   handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
-    const selection = window.getSelection();
 
     // Function will only propagate if there is no selected content
-    if(!selection.toString()){
       // Icon state changed to loading, and loadAudio will run on first execution
       if(!audio.hasAttribute("src")){
         this.icon = "hax:loading";
         this.loadAudio(this.source);
       } 
-      // Subsequent executions will trigger audioController based on state of audio object
       else if(this.canPlay){
         if(audio.paused){
           this.audioController(true);
@@ -152,7 +148,7 @@ class InlineAudio extends SimpleColors {
           this.audioController(false);
         }
       }
-    }
+    
   }
 
   // Updated lifecycle dispatches a custom event listener when play boolean changes state
