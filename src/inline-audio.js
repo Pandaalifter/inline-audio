@@ -175,7 +175,7 @@ class InlineAudio extends SimpleColors {
           <!-- A11y accessible -->
           <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}"></simple-icon-button>
           <slot></slot>
-          <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
+          <audio class="player" src="${this.source}" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
         </div>
     `;
   }
