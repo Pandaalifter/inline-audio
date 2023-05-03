@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { html, css } from 'lit';
 import { SimpleColors } from '@lrnwebcomponents/simple-colors';
 import "@lrnwebcomponents/simple-icon/simple-icon.js";
 import "@lrnwebcomponents/simple-icon/lib/simple-icons.js";
@@ -69,28 +69,34 @@ class InlineAudio extends SimpleColors {
     this.canPlay = false;
   }
 
+  // Listens for changes in audio object's time position through "timeUpdate" property, constantly fires
   handleProgress(){
     const audio = this.shadowRoot.querySelector(".player");
     const container = this.shadowRoot.querySelector(".container");
 
+    // If audio object has finished, flags audioController as false to reset assets
     if(audio.ended){
       this.audioController(false);
-      container.style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% 100%, var(--simple-colors-default-theme-grey-4) 100% 100%)`;
+      container.style.background = "var(--simple-colors-default-theme-grey-4)";
     }
+    // If audio object is playing, uses duration and current position to generate completion percentage
     if(!audio.paused){
       var audioDuration = audio.duration;
       var audioCurrentTime = audio.currentTime;
       var progressPercentage = (audioCurrentTime / audioDuration)*100;
+      // Percentage used to change progress of gradient on component's background
       container.style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-4) ${progressPercentage}% 100%)`;
     }
   }
 
+  // Function applies external source to audio object and starts the load process
   loadAudio(source) {
     const audioFile = this.shadowRoot.querySelector('.player');
     audioFile.src = source;
     audioFile.load();
   }
 
+  // Listens for audio object to flag "canplaythrough" property once source has fully loaded to prevent buffering
   handlePlaythrough(){
     setTimeout(() => {
       console.log("Loading finished");
@@ -99,8 +105,11 @@ class InlineAudio extends SimpleColors {
     }, 500); 
   }
 
+  // Function takes in boolean to determine action, used across other functions
   audioController(playState){
     const audio = this.shadowRoot.querySelector('.player');
+
+    // Flags playing boolean as true, starts audio object, and matches states of icons and accessibility
     if(playState){
       audio.play();
       this.playing = true;
@@ -109,6 +118,7 @@ class InlineAudio extends SimpleColors {
       this.title = "Pause";
       console.log(this.playing);
     }
+    // Flags playing boolean as false, stops audio object, and matches state of icons and accessibility
     else{
       audio.pause();
       this.playing = false;
@@ -119,15 +129,19 @@ class InlineAudio extends SimpleColors {
     }
   }
 
+  // When click event is flagged, listens for the state of audio object
   handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
     const selection = this.shadowRoot.getSelection();
 
+    // Function will only propagate if there is no selected content
     if(!selection.toString()){
+      // Icon state changed to loading, and loadAudio will run on first execution
       if(!audio.hasAttribute("src")){
         this.icon = "hax:loading";
         this.loadAudio(this.source);
       } 
+      // Subsequent executions will trigger audioController based on state of audio object
       else if(this.canPlay){
         if(audio.paused){
           this.audioController(true);
@@ -139,6 +153,7 @@ class InlineAudio extends SimpleColors {
     }
   }
 
+  // Updated lifecycle dispatches a custom event listener when play boolean changes state
   updated(changedProperties){
     changedProperties.forEach((oldValue, propName)=>{
       if(propName === "playing"){
@@ -157,7 +172,9 @@ class InlineAudio extends SimpleColors {
 
   render() {
     return html`
+        <!-- Clickable div containing audio player elements -->
         <div class="container" @click="${this.handleClickEvent}"> 
+          <!-- A11y accessible -->
           <simple-icon-button class="icon" title="${this.title}" aria-label="${this.aria}" icon="${this.icon}"></simple-icon-button>
           <slot></slot>
           <audio class="player" type="audio/mpeg" @canplaythrough="${this.handlePlaythrough}" @timeupdate="${this.handleProgress}"></audio>
