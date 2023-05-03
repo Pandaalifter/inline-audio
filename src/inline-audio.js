@@ -102,6 +102,7 @@ class InlineAudio extends SimpleColors {
 
   // Listens for audio object to flag "canplaythrough" property once source has fully loaded to prevent buffering
   handlePlaythrough(){
+    console.log("Steve is alive")
     setTimeout(() => {
       console.log("Loading finished");
       this.canPlay = true;
