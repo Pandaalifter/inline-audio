@@ -84,7 +84,8 @@ class InlineAudio extends SimpleColors {
       var audioDuration = audio.duration;
       var audioCurrentTime = audio.currentTime;
       var progressPercentage = (audioCurrentTime / audioDuration)*100;
-      var progressBlur = progressPercentage + 1;
+      // Provides a blur to ease the gradient transition
+      var progressBlur = progressPercentage + 3;
       // Percentage used to change progress of gradient on component's background
       container.style.background = `linear-gradient(90deg, var(--simple-colors-default-theme-accent-4) 0% ${progressPercentage}%, var(--simple-colors-default-theme-grey-4) ${progressBlur}% 100%)`;
     }
@@ -133,7 +134,7 @@ class InlineAudio extends SimpleColors {
   // When click event is flagged, listens for the state of audio object
   handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
-    const selection = this.shadowRoot.getSelection();
+    const selection = window.getSelection();
 
     // Function will only propagate if there is no selected content
     if(!selection.toString()){
