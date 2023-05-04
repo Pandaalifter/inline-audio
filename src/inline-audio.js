@@ -95,14 +95,12 @@ class InlineAudio extends SimpleColors {
   loadAudio(source) {
     const audioFile = this.shadowRoot.querySelector('.player');
     audioFile.src = source;
-    console.log("Source set");
     audioFile.load();
-    console.log("Actually loaded");
+    console.log("Loading Started");
   }
 
   // Listens for audio object to flag "canplaythrough" property once source has fully loaded to prevent buffering
   handlePlaythrough(){
-    console.log("Steve is alive")
     setTimeout(() => {
       console.log("Loading finished");
       this.canPlay = true;
@@ -138,6 +136,7 @@ class InlineAudio extends SimpleColors {
   handleClickEvent(){
     const audio = this.shadowRoot.querySelector('.player');
     const selection = window.getSelection();
+    console.log(selection);
 
     // Function will only propagate if there is no selected content
     if(!selection.toString()){
