@@ -22,7 +22,7 @@ class InlineAudio extends SimpleColors {
   static get styles(){ 
     return [...super.styles, css`
     :host {
-      --inline-audio-padding: 4px 4px 4px 4px;
+      --inline-audio-padding: 4px 8px 4px 4px;
       --inline-audio-margin: 8px 2px 8px;
       --inline-audio-border: 0;
       --inline-audio-icon-padding: 0px 4px 0px 0px;
@@ -32,7 +32,7 @@ class InlineAudio extends SimpleColors {
     .container {
       display: inline-flex;
       align-items: center;
-      min-width: 40px;
+      min-width: 32px;
       border-radius: 4px;
       cursor: pointer;
 
